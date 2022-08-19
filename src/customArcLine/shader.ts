@@ -1,0 +1,121 @@
+export const frag = `
+
+#define Animate 0.0
+
+uniform float u_opacity;
+uniform float u_blur : 0.9;
+uniform float u_time;
+uniform vec4 u_aimate: [ 0, 2., 1.0, 0.2 ];
+
+varying vec4 v_color;
+varying float v_distance_ratio;
+
+#pragma include "picking"
+
+void main() {
+  
+  gl_FragColor = v_color;
+  
+  gl_FragColor.a *= u_opacity;
+
+  if(u_aimate.x == Animate) {
+      float animateSpeed = u_time / u_aimate.y;
+      float alpha =1.0 - fract( mod(1.0- v_distance_ratio, u_aimate.z)* (1.0/ u_aimate.z) + u_time / u_aimate.y);
+      alpha = (alpha + u_aimate.w -1.0) / u_aimate.w;
+      
+      alpha = clamp(alpha, 0.0, 1.0);
+      gl_FragColor.a *= alpha;
+  }
+
+  gl_FragColor = filterColor(gl_FragColor);
+}
+`;
+export const vert = `
+#define Animate 0.0
+
+attribute vec4 a_Color;
+attribute vec3 a_Position;
+attribute vec4 a_Instance;
+attribute float a_Size;
+uniform mat4 u_ModelMatrix;
+uniform mat4 u_Mvp;
+uniform float segmentNumber;
+uniform vec4 u_aimate: [ 0, 2., 1.0, 0.2 ];
+varying vec4 v_color;
+
+uniform float u_thetaOffset: 0.314;
+
+uniform float u_opacity: 1.0;
+varying float v_distance_ratio;
+
+
+#pragma include "projection"
+#pragma include "project"
+#pragma include "picking"
+
+float bezier3(vec3 arr, float t) {
+  float ut = 1. - t;
+  return (arr.x * ut + arr.y * t) * ut + (arr.y * ut + arr.z * t) * t;
+}
+vec2 midPoint(vec2 source, vec2 target, float arcThetaOffset) {
+  vec2 center = target - source;
+  float r = length(center);
+  float theta = atan(center.y, center.x);
+  float thetaOffset = arcThetaOffset;
+  float r2 = r / 2.0 / cos(thetaOffset);
+  float theta2 = theta + thetaOffset;
+  vec2 mid = vec2(r2*cos(theta2) + source.x, r2*sin(theta2) + source.y);
+  return mid;
+}
+float getSegmentRatio(float index) {
+     return index / (segmentNumber - 1.);
+}
+vec2 interpolate (vec2 source, vec2 target, float t, float arcThetaOffset) {
+  // if the angularDist is PI, linear interpolation is applied. otherwise, use spherical interpolation
+  vec2 mid = midPoint(source, target, arcThetaOffset);
+  vec3 x = vec3(source.x, mid.x, target.x);
+  vec3 y = vec3(source.y, mid.y, target.y);
+  return vec2(bezier3(x ,t), bezier3(y,t));
+}
+vec2 getExtrusionOffset(vec2 line_clipspace, float offset_direction) {
+  // normalized direction of the line
+  vec2 dir_screenspace = normalize(line_clipspace);
+  // rotate by 90 degrees
+   dir_screenspace = vec2(-dir_screenspace.y, dir_screenspace.x);
+  vec2 offset = dir_screenspace * offset_direction * setPickingSize(a_Size) / 2.0;
+  return offset;
+}
+vec2 getNormal(vec2 line_clipspace, float offset_direction) {
+  // normalized direction of the line
+  vec2 dir_screenspace = normalize(line_clipspace);
+  // rotate by 90 degrees
+   dir_screenspace = vec2(-dir_screenspace.y, dir_screenspace.x);
+   return reverse_offset_normal(vec3(dir_screenspace,1.0)).xy * sign(offset_direction);
+}
+
+void main() {
+  v_color = a_Color;
+
+  vec2 source = a_Instance.rg;  // 起始点
+  vec2 target =  a_Instance.ba; // 终点
+  float segmentIndex = a_Position.x;
+  float segmentRatio = getSegmentRatio(segmentIndex);
+
+  float indexDir = mix(-1.0, 1.0, step(segmentIndex, 0.0));
+  float nextSegmentRatio = getSegmentRatio(segmentIndex + indexDir);
+
+  v_distance_ratio = segmentIndex / segmentNumber;
+
+  vec4 curr = project_position(vec4(interpolate(source, target, segmentRatio, u_thetaOffset), 0.0, 1.0));
+  vec4 next = project_position(vec4(interpolate(source, target, nextSegmentRatio, u_thetaOffset), 0.0, 1.0));
+  
+  vec2 offset = project_pixel(getExtrusionOffset((next.xy - curr.xy) * indexDir, a_Position.y));
+
+  if(u_CoordinateSystem == COORDINATE_SYSTEM_P20_2) { // gaode2.x
+    gl_Position = u_Mvp * (vec4(curr.xy + offset, 0, 1.0));
+  } else {
+    gl_Position = project_common_position_to_clipspace(vec4(curr.xy + offset, 0, 1.0));
+  }
+  setPickingColor(a_PickingColor);
+}
+`;
