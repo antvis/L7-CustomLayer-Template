@@ -8,9 +8,9 @@ import {
   gl,
   AttributeType,
 } from '@antv/l7';
-import { pointFillFrag, pointFillVert } from './shader';
+import { frag, vert } from './shader';
 
-interface ICustomPointLayerStyleOptions {
+interface ICustomLayerStyleOptions {
   opacity: number;
   strokeOpacity: number;
   strokeWidth: number;
@@ -24,7 +24,7 @@ export default class CustomModel extends BaseModel {
       stroke = [1.0, 0.0, 0.0, 1.0],
       strokeOpacity = 1.0,
       strokeWidth = 0,
-    } = this.layer.getLayerConfig() as ICustomPointLayerStyleOptions;
+    } = this.layer.getLayerConfig() as ICustomLayerStyleOptions;
     return {
       u_opacity: opacity,
       u_stroke_opacity: strokeOpacity,
@@ -41,8 +41,8 @@ export default class CustomModel extends BaseModel {
     this.layer
       .buildLayerModel({
         moduleName: 'customPoint',
-        vertexShader: pointFillVert,
-        fragmentShader: pointFillFrag,
+        vertexShader: vert,
+        fragmentShader: frag,
         triangulation: PointFillTriangulation,
         depth: { enable: false },
       })

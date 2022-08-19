@@ -573,7 +573,7 @@ function _getPrototypeOf(o) {
   return _getPrototypeOf(o);
 }
 
-import { BaseModel, PointFillTriangulation, gl, AttributeType } from '@antv/l7';
+import { BaseModel, polygonFillTriangulation } from '@antv/l7';
 import { frag, vert } from './shader';
 
 var CustomModel = /*#__PURE__*/ (function (_BaseModel) {
@@ -593,19 +593,10 @@ var CustomModel = /*#__PURE__*/ (function (_BaseModel) {
       value: function getUninforms() {
         var _ref = this.layer.getLayerConfig(),
           _ref$opacity = _ref.opacity,
-          opacity = _ref$opacity === void 0 ? 1 : _ref$opacity,
-          _ref$stroke = _ref.stroke,
-          stroke = _ref$stroke === void 0 ? [1.0, 0.0, 0.0, 1.0] : _ref$stroke,
-          _ref$strokeOpacity = _ref.strokeOpacity,
-          strokeOpacity = _ref$strokeOpacity === void 0 ? 1.0 : _ref$strokeOpacity,
-          _ref$strokeWidth = _ref.strokeWidth,
-          strokeWidth = _ref$strokeWidth === void 0 ? 0 : _ref$strokeWidth;
+          opacity = _ref$opacity === void 0 ? 1 : _ref$opacity;
 
         return {
           u_opacity: opacity,
-          u_stroke_opacity: strokeOpacity,
-          u_stroke_width: strokeWidth,
-          u_stroke_color: stroke,
         };
       },
     },
@@ -627,10 +618,10 @@ var CustomModel = /*#__PURE__*/ (function (_BaseModel) {
                     case 0:
                       this.layer
                         .buildLayerModel({
-                          moduleName: 'customPoint',
+                          moduleName: 'customPolygon',
                           vertexShader: vert,
                           fragmentShader: frag,
-                          triangulation: PointFillTriangulation,
+                          triangulation: polygonFillTriangulation,
                           depth: {
                             enable: false,
                           },
@@ -664,69 +655,7 @@ var CustomModel = /*#__PURE__*/ (function (_BaseModel) {
     },
     {
       key: 'registerBuiltinAttributes',
-      value: function registerBuiltinAttributes() {
-        var shape2d = this.layer.getLayerConfig().shape2d;
-        this.styleAttributeService.registerStyleAttribute({
-          name: 'extrude',
-          type: AttributeType.Attribute,
-          descriptor: {
-            name: 'a_Extrude',
-            buffer: {
-              // give the WebGL driver a hint that this buffer may change
-              usage: gl.DYNAMIC_DRAW,
-              data: [],
-              type: gl.FLOAT,
-            },
-            size: 3,
-            update: function update(feature, featureIdx, vertex, attributeIdx) {
-              var extrude = [1, 1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0];
-              var extrudeIndex = (attributeIdx % 4) * 3;
-              return [extrude[extrudeIndex], extrude[extrudeIndex + 1], extrude[extrudeIndex + 2]];
-            },
-          },
-        }); // point layer size;
-
-        this.styleAttributeService.registerStyleAttribute({
-          name: 'size',
-          type: AttributeType.Attribute,
-          descriptor: {
-            name: 'a_Size',
-            buffer: {
-              // give the WebGL driver a hint that this buffer may change
-              usage: gl.DYNAMIC_DRAW,
-              data: [],
-              type: gl.FLOAT,
-            },
-            size: 1,
-            update: function update(feature, featureIdx, vertex, attributeIdx) {
-              var _feature$size = feature.size,
-                size = _feature$size === void 0 ? 5 : _feature$size;
-              return Array.isArray(size) ? [size[0]] : [size];
-            },
-          },
-        }); // point layer size;
-
-        this.styleAttributeService.registerStyleAttribute({
-          name: 'shape',
-          type: AttributeType.Attribute,
-          descriptor: {
-            name: 'a_Shape',
-            buffer: {
-              // give the WebGL driver a hint that this buffer may change
-              usage: gl.DYNAMIC_DRAW,
-              data: [],
-              type: gl.FLOAT,
-            },
-            size: 1,
-            update: function update(feature, featureIdx, vertex, attributeIdx) {
-              var _feature$shape = feature.shape,
-                shape = _feature$shape === void 0 ? 2 : _feature$shape;
-              var shapeIndex = shape2d.indexOf(shape);
-              return [shapeIndex];
-            },
-          },
-        });
-      },
+      value: function registerBuiltinAttributes() {},
     },
   ]);
 

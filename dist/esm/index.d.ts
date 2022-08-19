@@ -1,2 +1,3 @@
 import CustomPointLayer from './customPoint';
-export { CustomPointLayer };
+import CustomPolygonLayer from './customPolygon';
+export { CustomPointLayer, CustomPolygonLayer };

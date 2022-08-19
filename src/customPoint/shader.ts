@@ -1,4 +1,4 @@
-export const pointFillFrag = `
+export const frag = `
 uniform float u_opacity : 1.0;
 uniform float u_stroke_opacity : 1;
 uniform float u_stroke_width : 2;
@@ -67,7 +67,7 @@ void main() {
     gl_FragColor = filterColor(gl_FragColor);
 }
 `;
-export const pointFillVert = `
+export const vert = `
 attribute vec4 a_Color;
 attribute vec3 a_Position;
 attribute vec3 a_Extrude;
