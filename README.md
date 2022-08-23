@@ -1,5 +1,7 @@
 # L7-CustomLayer-Template
 
+- 详细文档 https://github.com/antvis/L7-CustomLayer-Template/tree/master/docs/template%20api
+
 ## Getting Started
 
 Install dependencies,
