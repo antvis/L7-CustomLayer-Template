@@ -42,6 +42,8 @@ export default () => {
         len: 25,
         rotate: Math.PI / 4,
         opacity: 0.5,
+        strokeWidth: 0.1,
+        stroke: '#000',
       });
 
     scene.on('loaded', () => {

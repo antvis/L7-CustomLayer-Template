@@ -1,10 +1,17 @@
-import { BaseModel, IModelUniform, IModel, IEncodeFeature, gl, AttributeType } from '@antv/l7';
+import {
+  BaseModel,
+  IModelUniform,
+  IModel,
+  IEncodeFeature,
+  gl,
+  AttributeType,
+  rgb2arr,
+} from '@antv/l7';
 import { PointFillTriangulation } from './triangulation';
 import { frag, vert } from './shader';
 
 interface ICustomLayerStyleOptions {
   opacity: number;
-  strokeOpacity: number;
   strokeWidth: number;
   stroke: string;
   len: number;
@@ -15,8 +22,7 @@ export default class CustomModel extends BaseModel {
   public getUninforms(): IModelUniform {
     const {
       opacity = 1,
-      stroke = [1.0, 0.0, 0.0, 1.0],
-      strokeOpacity = 1.0,
+      stroke = '#fff',
       strokeWidth = 0,
       len = 0.25,
       rotate = 0,
@@ -25,9 +31,8 @@ export default class CustomModel extends BaseModel {
       u_len: len,
       u_rotate: rotate,
       u_opacity: opacity,
-      u_stroke_opacity: strokeOpacity,
       u_stroke_width: strokeWidth,
-      u_stroke_color: stroke as number[],
+      u_stroke_color: rgb2arr(stroke),
     };
   }
 

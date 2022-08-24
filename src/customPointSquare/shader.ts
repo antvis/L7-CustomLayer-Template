@@ -1,7 +1,6 @@
 export const frag = `
 uniform float u_opacity : 1.0;
-uniform float u_stroke_opacity : 1;
-uniform float u_stroke_width : 2;
+uniform float u_stroke_width : 1.0;
 uniform vec4 u_stroke_color : [0.0, 0.0, 0.0, 0.0];
 
 varying vec4 v_color;
@@ -10,9 +9,17 @@ varying vec2 v_uv;
 #pragma include "picking"
 
 void main() {
-
     gl_FragColor = v_color;
-    // gl_FragColor = vec4(v_uv, 0.0, 1.0);
+    
+
+    if(u_stroke_width > 0.001) {
+        float strokeWidth = min(u_stroke_width, 0.5);
+        float strokeBorder = 0.5 - strokeWidth;
+        if(abs(v_uv.x - 0.5) > strokeBorder || abs(v_uv.y - 0.5) > strokeBorder) {
+            gl_FragColor = u_stroke_color;
+        }
+    }
+
     gl_FragColor.a *= u_opacity;
     gl_FragColor = filterColor(gl_FragColor);
 }
