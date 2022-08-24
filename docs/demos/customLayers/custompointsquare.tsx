@@ -22,12 +22,14 @@ export default () => {
             lat: 30,
             lng1: 120.5,
             lat1: 29.5,
+            color: '#f00',
           },
           {
-            lng: 121,
+            lng: 120.5,
             lat: 30,
-            lng1: 121.5,
+            lng1: 121,
             lat1: 29.5,
+            color: '#ff0',
           },
         ],
         {
@@ -40,10 +42,9 @@ export default () => {
           },
         },
       )
-      .shape('circle')
-      .size(20)
-      .color('#f00')
+      .color('color')
       .active(true);
+
     scene.on('loaded', () => {
       scene.addLayer(layer);
       layer.on('click', () => {
