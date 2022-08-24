@@ -25,6 +25,7 @@ attribute vec2 a_uv;
 uniform mat4 u_ModelMatrix;
 uniform mat4 u_Mvp;
 uniform float u_len;
+uniform float u_rotate: 0.0;
 
 varying vec4 v_color;
 varying vec2 v_uv;
@@ -32,23 +33,24 @@ varying vec2 v_uv;
 #pragma include "projection"
 #pragma include "picking"
 
-
 void main() { 
     vec2 pos = a_Position.xy;
     float len = u_len;
+    
+    highp float angle_sin = sin(u_rotate);
+    highp float angle_cos = cos(u_rotate);
+    mat2 rotation_matrix = mat2(angle_cos, -1.0 * angle_sin, angle_sin, angle_cos);
+    vec2 offset;
     if(a_uv.x == 0.0 && a_uv.y == 0.0) { // left top
-        pos[0] -= len;
-        pos[1] += len;
+        offset = vec2(-len, len) * rotation_matrix;
     } else if(a_uv.x == 1.0 && a_uv.y == 0.0) { // right top
-        pos[0] += len;
-        pos[1] += len;
+        offset = vec2(len, len) * rotation_matrix;
     } else if(a_uv.x == 1.0 && a_uv.y == 1.0) { // right bottom
-        pos[0] += len;
-        pos[1] -= len;
+        offset = vec2(len, -len) * rotation_matrix;
     } else { // left bottom
-        pos[0] -= len;
-        pos[1] -= len;
+        offset = vec2(-len, -len) * rotation_matrix;
     }
+    pos += offset;
     
     v_color = a_Color;
     v_uv = a_uv;

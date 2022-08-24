@@ -8,6 +8,7 @@ interface ICustomLayerStyleOptions {
   strokeWidth: number;
   stroke: string;
   len: number;
+  rotate: number;
 }
 
 export default class CustomModel extends BaseModel {
@@ -18,9 +19,11 @@ export default class CustomModel extends BaseModel {
       strokeOpacity = 1.0,
       strokeWidth = 0,
       len = 0.25,
+      rotate = 0,
     } = this.layer.getLayerConfig() as ICustomLayerStyleOptions;
     return {
       u_len: len,
+      u_rotate: rotate,
       u_opacity: opacity,
       u_stroke_opacity: strokeOpacity,
       u_stroke_width: strokeWidth,

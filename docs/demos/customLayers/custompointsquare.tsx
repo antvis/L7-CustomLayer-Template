@@ -38,10 +38,10 @@ export default () => {
       )
       .color('color')
       .active(true)
-      .rotate(0.2)
       .size(0.25)
       .style({
         len: 0.25,
+        rotate: Math.PI / 4,
         opacity: 0.5,
       });
 
