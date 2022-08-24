@@ -1,14 +1,23 @@
 import { IEncodeFeature } from '@antv/l7';
+import { calculateCentroid } from '../utils';
 
 export function PointFillTriangulation(feature: IEncodeFeature) {
-  const [p1, p2] = feature.coordinates as [number, number][];
-  const v0 = [...p1];
+  const coordinates = calculateCentroid(feature.coordinates);
+
+  const v0 = [...coordinates];
+
   const v0uv = [0, 0];
-  const v1 = [p2[0], p1[1]];
+
+  const v1 = [...coordinates];
+
   const v1uv = [1, 0];
-  const v2 = [...p2];
+
+  const v2 = [...coordinates];
+
   const v2uv = [1, 1];
-  const v3 = [p1[0], p2[1]];
+
+  const v3 = [...coordinates];
+
   const v3uv = [0, 1];
 
   // p1
@@ -22,6 +31,6 @@ export function PointFillTriangulation(feature: IEncodeFeature) {
   return {
     vertices: [...v0, ...v0uv, ...v1, ...v1uv, ...v2, ...v2uv, ...v3, ...v3uv],
     indices: [0, 1, 2, 2, 3, 0],
-    size: 4,
+    size: coordinates.length + 2,
   };
 }

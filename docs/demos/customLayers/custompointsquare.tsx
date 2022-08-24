@@ -1,5 +1,5 @@
 import { Scene } from '@antv/l7';
-import { GaodeMap } from '@antv/l7-maps';
+import { GaodeMap, GaodeMapV2 } from '@antv/l7-maps';
 import React, { useEffect } from 'react';
 import { CustomPointSquareLayer } from 'l7-customlayer-template';
 
@@ -20,15 +20,11 @@ export default () => {
           {
             lng: 120,
             lat: 30,
-            lng1: 120.5,
-            lat1: 29.5,
             color: '#f00',
           },
           {
             lng: 120.5,
             lat: 30,
-            lng1: 121,
-            lat1: 29.5,
             color: '#ff0',
           },
         ],
@@ -37,14 +33,15 @@ export default () => {
             type: 'json',
             x: 'lng',
             y: 'lat',
-            x1: 'lng1',
-            y1: 'lat1',
           },
         },
       )
       .color('color')
       .active(true)
+      .rotate(0.2)
+      .size(0.25)
       .style({
+        len: 0.25,
         opacity: 0.5,
       });
 

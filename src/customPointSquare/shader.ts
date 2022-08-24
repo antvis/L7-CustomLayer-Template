@@ -24,6 +24,7 @@ attribute vec2 a_uv;
 
 uniform mat4 u_ModelMatrix;
 uniform mat4 u_Mvp;
+uniform float u_len;
 
 varying vec4 v_color;
 varying vec2 v_uv;
@@ -32,13 +33,27 @@ varying vec2 v_uv;
 #pragma include "picking"
 
 
-void main() {
-
+void main() { 
+    vec2 pos = a_Position.xy;
+    float len = u_len;
+    if(a_uv.x == 0.0 && a_uv.y == 0.0) { // left top
+        pos[0] -= len;
+        pos[1] += len;
+    } else if(a_uv.x == 1.0 && a_uv.y == 0.0) { // right top
+        pos[0] += len;
+        pos[1] += len;
+    } else if(a_uv.x == 1.0 && a_uv.y == 1.0) { // right bottom
+        pos[0] += len;
+        pos[1] -= len;
+    } else { // left bottom
+        pos[0] -= len;
+        pos[1] -= len;
+    }
+    
     v_color = a_Color;
     v_uv = a_uv;
 
-
-    vec4 project_pos = project_position(vec4(a_Position.xy, 0.0, 1.0));
+    vec4 project_pos = project_position(vec4(pos.xy, 0.0, 1.0));
     if(u_CoordinateSystem == COORDINATE_SYSTEM_P20_2) {
         gl_Position = u_Mvp * vec4(project_pos.xy, 0.0, 1.0);
     } else {
