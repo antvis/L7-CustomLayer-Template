@@ -32,8 +32,7 @@ export default class CustomModel extends BaseModel {
   public async buildModels(callbackModel: (models: IModel[]) => void) {
     this.layer
       .buildLayerModel({
-        // primitive: gl.POINTS,
-        moduleName: 'customPoint',
+        moduleName: 'customPointSquare',
         vertexShader: vert,
         fragmentShader: frag,
         triangulation: PointFillTriangulation,
@@ -49,8 +48,6 @@ export default class CustomModel extends BaseModel {
   }
 
   protected registerBuiltinAttributes() {
-    const shape2d = this.layer.getLayerConfig().shape2d as string[];
-
     this.styleAttributeService.registerStyleAttribute({
       name: 'uv',
       type: AttributeType.Attribute,
@@ -70,31 +67,6 @@ export default class CustomModel extends BaseModel {
           attributeIdx: number,
         ) => {
           return [vertex[2], vertex[3]];
-        },
-      },
-    });
-
-    // point layer size;
-    this.styleAttributeService.registerStyleAttribute({
-      name: 'size',
-      type: AttributeType.Attribute,
-      descriptor: {
-        name: 'a_Size',
-        buffer: {
-          // give the WebGL driver a hint that this buffer may change
-          usage: gl.DYNAMIC_DRAW,
-          data: [],
-          type: gl.FLOAT,
-        },
-        size: 1,
-        update: (
-          feature: IEncodeFeature,
-          featureIdx: number,
-          vertex: number[],
-          attributeIdx: number,
-        ) => {
-          const { size = 5 } = feature;
-          return Array.isArray(size) ? [size[0]] : [size];
         },
       },
     });
