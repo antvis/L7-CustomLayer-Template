@@ -43,7 +43,10 @@ export default () => {
         },
       )
       .color('color')
-      .active(true);
+      .active(true)
+      .style({
+        opacity: 0.5,
+      });
 
     scene.on('loaded', () => {
       scene.addLayer(layer);
