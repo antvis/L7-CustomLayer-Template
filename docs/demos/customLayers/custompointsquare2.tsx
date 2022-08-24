@@ -1,7 +1,7 @@
 import { Scene } from '@antv/l7';
 import { GaodeMap, GaodeMapV2 } from '@antv/l7-maps';
 import React, { useEffect } from 'react';
-import { CustomPointSquareLayer } from 'l7-customlayer-template';
+import { CustomPointSquareLayer, CustomPointSquareLayer2 } from 'l7-customlayer-template';
 
 export default () => {
   useEffect(() => {
@@ -14,7 +14,7 @@ export default () => {
       }),
     });
 
-    const layer = new CustomPointSquareLayer()
+    const layer = new CustomPointSquareLayer2()
       .source(
         [
           {
@@ -38,9 +38,8 @@ export default () => {
       )
       .color('color')
       .active(true)
+      .size(0.25)
       .style({
-        len: 0.25,
-        // rotate: Math.PI / 4,
         opacity: 0.5,
         strokeWidth: 0.1,
         stroke: '#000',
