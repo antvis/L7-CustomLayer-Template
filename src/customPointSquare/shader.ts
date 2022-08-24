@@ -50,16 +50,17 @@ void main() {
     } else { // left bottom
         offset = vec2(-len, -len) * rotation_matrix;
     }
-    pos += offset;
     
     v_color = a_Color;
     v_uv = a_uv;
 
+    offset = project_pixel(offset);
+
     vec4 project_pos = project_position(vec4(pos.xy, 0.0, 1.0));
     if(u_CoordinateSystem == COORDINATE_SYSTEM_P20_2) {
-        gl_Position = u_Mvp * vec4(project_pos.xy, 0.0, 1.0);
+        gl_Position = u_Mvp * vec4(project_pos.xy + offset, 0.0, 1.0);
     } else {
-        gl_Position = project_common_position_to_clipspace(vec4(project_pos.xy, 0.0, 1.0));
+        gl_Position = project_common_position_to_clipspace(vec4(project_pos.xy + offset, 0.0, 1.0));
     }
     setPickingColor(a_PickingColor);
 }
