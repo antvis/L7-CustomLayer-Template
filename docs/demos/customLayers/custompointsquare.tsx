@@ -1,4 +1,4 @@
-import { Scene, Source } from '@antv/l7';
+import { Scene } from '@antv/l7';
 import { GaodeMap } from '@antv/l7-maps';
 import React, { useEffect } from 'react';
 import { CustomPointSquareLayer } from 'l7-customlayer-template';
@@ -52,14 +52,6 @@ export default () => {
         alert('click');
       });
     });
-    const source = new Source(data, {
-      parser: {
-        type: 'json',
-        x: 'dLong',
-        y: 'dLat',
-      },
-    });
-    console.log('source', source);
   }, []);
   return (
     <div
