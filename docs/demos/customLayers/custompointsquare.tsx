@@ -23,8 +23,8 @@ export default () => {
       id: 'map',
       map: new GaodeMap({
         style: 'light',
-        center: [116.4748, 39.9],
-        zoom: 13,
+        center: [116.47975, 39.9152],
+        zoom: 12.5,
       }),
     });
 
