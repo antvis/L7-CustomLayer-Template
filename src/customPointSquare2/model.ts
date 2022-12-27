@@ -30,26 +30,19 @@ export default class CustomModel extends BaseModel {
     };
   }
 
-  public initModels(callbackModel: (models: IModel[]) => void) {
-    this.buildModels(callbackModel);
+  public async initModels(): Promise<IModel[]> {
+    return await this.buildModels();
   }
 
-  public async buildModels(callbackModel: (models: IModel[]) => void) {
-    this.layer
-      .buildLayerModel({
-        moduleName: 'customPointSquare',
-        vertexShader: vert,
-        fragmentShader: frag,
-        triangulation: PointFillTriangulation,
-        depth: { enable: false },
-      })
-      .then((model) => {
-        callbackModel([model]);
-      })
-      .catch((err) => {
-        console.warn(err);
-        callbackModel([]);
-      });
+  public async buildModels(): Promise<IModel[]> {
+    const model = await this.layer.buildLayerModel({
+      moduleName: 'customPointSquare',
+      vertexShader: vert,
+      fragmentShader: frag,
+      triangulation: PointFillTriangulation,
+      depth: { enable: false },
+    });
+    return [model];
   }
 
   protected registerBuiltinAttributes() {

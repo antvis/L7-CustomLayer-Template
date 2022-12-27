@@ -4,12 +4,14 @@ import CustomModel from './model';
 export default class CustomlinearCylinder extends BaseLayer {
   public type: string = 'CustomLinearCylinderLayer';
 
-  public buildModels() {
+  public async buildModels() {
     this.layerModel = new CustomModel(this);
-    this.layerModel.initModels((models) => {
-      this.models = models;
-      this.layerService.updateLayerRenderList();
-      this.renderLayers();
-    });
+    await this.initLayerModels();
+  }
+
+  protected async initLayerModels() {
+    this.models.forEach((model) => model.destroy());
+    this.models = [];
+    this.models = await this.layerModel.initModels();
   }
 }
