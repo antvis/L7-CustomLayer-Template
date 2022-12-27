@@ -57,4 +57,18 @@ public initModels(callbackModel: (models: IModel[]) => void) {
 
 ```ts
 // new
+  public async initModels(): Promise<IModel[]> {
+    return await this.buildModels();
+  }
+
+  public async buildModels(): Promise<IModel[]> {
+    const model = await this.layer.buildLayerModel({
+      moduleName: 'customPolygon',
+      vertexShader: vert,
+      fragmentShader: frag,
+      triangulation: polygonFillTriangulation,
+      depth: { enable: false },
+    });
+    return [model];
+  }
 ```
