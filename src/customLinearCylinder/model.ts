@@ -33,27 +33,20 @@ export default class CustomModel extends BaseModel {
     };
   }
 
-  public initModels(callbackModel: (models: IModel[]) => void) {
+  public async initModels(): Promise<IModel[]> {
     this.updateTexture();
-    this.buildModels(callbackModel);
+    return await this.buildModels();
   }
 
-  public async buildModels(callbackModel: (models: IModel[]) => void) {
-    this.layer
-      .buildLayerModel({
-        moduleName: 'customLinearCylinder',
-        vertexShader: vert,
-        fragmentShader: frag,
-        triangulation: PointExtrudeTriangulation,
-        depth: { enable: true },
-      })
-      .then((model) => {
-        callbackModel([model]);
-      })
-      .catch((err) => {
-        console.warn(err);
-        callbackModel([]);
-      });
+  public async buildModels(): Promise<IModel[]> {
+    const model = await this.layer.buildLayerModel({
+      moduleName: 'customLinearCylinder',
+      vertexShader: vert,
+      fragmentShader: frag,
+      triangulation: PointExtrudeTriangulation,
+      depth: { enable: true },
+    });
+    return [model];
   }
 
   protected registerBuiltinAttributes() {

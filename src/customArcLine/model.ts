@@ -31,28 +31,21 @@ export default class CustomModel extends BaseModel {
     };
   }
 
-  public initModels(callbackModel: (models: IModel[]) => void) {
-    this.buildModels(callbackModel);
+  public async initModels(): Promise<IModel[]> {
+    return await this.buildModels();
   }
 
-  public async buildModels(callbackModel: (models: IModel[]) => void) {
+  public async buildModels(): Promise<IModel[]> {
     const { segmentNumber = 30 } = this.layer.getLayerConfig() as ICustomLayerStyleOptions;
-    this.layer
-      .buildLayerModel({
-        moduleName: 'customArcLine',
-        vertexShader: vert,
-        fragmentShader: frag,
-        triangulation: LineArcTriangulation,
-        depth: { enable: false },
-        segmentNumber,
-      })
-      .then((model) => {
-        callbackModel([model]);
-      })
-      .catch((err) => {
-        console.warn(err);
-        callbackModel([]);
-      });
+    const model = await this.layer.buildLayerModel({
+      moduleName: 'customArcLine',
+      vertexShader: vert,
+      fragmentShader: frag,
+      triangulation: LineArcTriangulation,
+      depth: { enable: false },
+      segmentNumber,
+    });
+    return [model];
   }
 
   public getAnimateUniforms(): IModelUniform {

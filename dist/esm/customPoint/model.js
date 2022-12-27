@@ -611,39 +611,21 @@ var CustomModel = /*#__PURE__*/ (function (_BaseModel) {
     },
     {
       key: 'initModels',
-      value: function initModels(callbackModel) {
-        this.buildModels(callbackModel);
-      },
-    },
-    {
-      key: 'buildModels',
       value: (function () {
-        var _buildModels = _asyncToGenerator(
-          /*#__PURE__*/ _regeneratorRuntime().mark(function _callee(callbackModel) {
+        var _initModels = _asyncToGenerator(
+          /*#__PURE__*/ _regeneratorRuntime().mark(function _callee() {
             return _regeneratorRuntime().wrap(
               function _callee$(_context) {
                 while (1) {
                   switch ((_context.prev = _context.next)) {
                     case 0:
-                      this.layer
-                        .buildLayerModel({
-                          moduleName: 'customPoint',
-                          vertexShader: vert,
-                          fragmentShader: frag,
-                          triangulation: PointFillTriangulation,
-                          depth: {
-                            enable: false,
-                          },
-                        })
-                        .then(function (model) {
-                          callbackModel([model]);
-                        })
-                        .catch(function (err) {
-                          console.warn(err);
-                          callbackModel([]);
-                        });
+                      _context.next = 2;
+                      return this.buildModels();
 
-                    case 1:
+                    case 2:
+                      return _context.abrupt('return', _context.sent);
+
+                    case 3:
                     case 'end':
                       return _context.stop();
                   }
@@ -655,7 +637,52 @@ var CustomModel = /*#__PURE__*/ (function (_BaseModel) {
           }),
         );
 
-        function buildModels(_x) {
+        function initModels() {
+          return _initModels.apply(this, arguments);
+        }
+
+        return initModels;
+      })(),
+    },
+    {
+      key: 'buildModels',
+      value: (function () {
+        var _buildModels = _asyncToGenerator(
+          /*#__PURE__*/ _regeneratorRuntime().mark(function _callee2() {
+            var model;
+            return _regeneratorRuntime().wrap(
+              function _callee2$(_context2) {
+                while (1) {
+                  switch ((_context2.prev = _context2.next)) {
+                    case 0:
+                      _context2.next = 2;
+                      return this.layer.buildLayerModel({
+                        moduleName: 'customPoint',
+                        vertexShader: vert,
+                        fragmentShader: frag,
+                        triangulation: PointFillTriangulation,
+                        depth: {
+                          enable: false,
+                        },
+                      });
+
+                    case 2:
+                      model = _context2.sent;
+                      return _context2.abrupt('return', [model]);
+
+                    case 4:
+                    case 'end':
+                      return _context2.stop();
+                  }
+                }
+              },
+              _callee2,
+              this,
+            );
+          }),
+        );
+
+        function buildModels() {
           return _buildModels.apply(this, arguments);
         }
 
